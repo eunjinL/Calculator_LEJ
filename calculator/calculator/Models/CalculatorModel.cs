@@ -102,7 +102,7 @@ namespace calculator.Models
             {
                 return double.NaN;
             }
-            return Math.Sqrt(value); 
+            return Math.Sqrt(value);
         }
         /**
         * @brief Sin 연산 기능
@@ -151,6 +151,113 @@ namespace calculator.Models
         public double Percent(double value)
         {
             return value / 100;
+        }
+
+        public string ConvertToPostfix(string infix)
+        {
+            Stack<char> operatorStack = new Stack<char>();
+            StringBuilder postfix = new StringBuilder();
+
+            for (int i = 0; i < infix.Length; i++)
+            {
+                char token = infix[i];
+
+                if (char.IsDigit(token) || token == '.')
+                {
+                    // 숫자를 계속 누적합니다.
+                    postfix.Append(token);
+                }
+                else
+                {
+                    // 숫자가 끝나면 공백을 추가합니다.
+                    postfix.Append(" ");
+
+                    // 현재 연산자의 우선순위가 스택의 맨 위 연산자보다 낮거나 같다면, 스택에서 꺼내 후위 표기식에 추가합니다.
+                    while (operatorStack.Count > 0 && Precedence(token) <= Precedence(operatorStack.Peek()))
+                    {
+                        postfix.Append(operatorStack.Pop() + " ");
+                    }
+                    operatorStack.Push(token);
+                }
+            }
+
+            // 마지막 숫자에 공백을 추가합니다.
+            postfix.Append(" ");
+
+            // 남은 연산자를 꺼내 후위 표기식에 추가합니다.
+            while (operatorStack.Count > 0)
+            {
+                char operatorSymbol = operatorStack.Pop();
+                if (Precedence(operatorSymbol) == -1)
+                {
+                    throw new ArgumentException("Invalid operator symbol");
+                }
+                postfix.Append(operatorSymbol + " ");
+            }
+
+            return postfix.ToString().Trim();
+        }
+
+
+        public int Precedence(char operatorSymbol)
+        {
+            switch (operatorSymbol)
+            {
+                case '+':
+                case '-':
+                    return 1;
+                case 'x':
+                case '/':
+                    return 2;
+                default:
+                    throw new ArgumentException("Invalid operator symbol");
+            }
+        }
+
+        public double EvaluatePostfix(string postfix)
+        {
+            Stack<double> operandStack = new Stack<double>();
+
+            foreach (string token in postfix.Split(' '))
+            {
+                if (double.TryParse(token, out double number))
+                {
+                    operandStack.Push(number);
+                }
+                else
+                {
+                    double operand2 = operandStack.Pop(); // 두 번째 피연산자
+                    double operand1 = operandStack.Pop(); // 첫 번째 피연산자
+                    double result = Operate(operand1, operand2, token[0]);
+                    operandStack.Push(result);
+                }
+            }
+
+            return operandStack.Pop();
+        }
+
+        public double Operate(double operand1, double operand2, char operatorSymbol)
+        {
+            switch (operatorSymbol)
+            {
+                case '+':
+                    return operand1 + operand2;
+                case '-':
+                    return operand1 - operand2;
+                case 'x':
+                    return operand1 * operand2;
+                case '/':
+                    if (operand2 != 0)
+                    {
+                        return operand1 / operand2;
+                    }
+                    else
+                    {
+                        throw new DivideByZeroException("Division by zero");
+                    }
+                default:
+                    throw new ArgumentException("Invalid operator symbol");
+            }
         }
     }
 }

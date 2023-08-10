@@ -22,9 +22,9 @@ namespace calculator.ViewModels
         #region [속성]
         public string Result
         {
-            get 
-            { 
-                return result; 
+            get
+            {
+                return result;
             }
             set
             {
@@ -44,25 +44,25 @@ namespace calculator.ViewModels
                 OnPropertyChanged(nameof(CalculationProcess));
             }
         }
-        public ICommand NumberCommand 
-        { 
-            get; 
-            private set; 
-        }
-        public ICommand DeleteCommand 
-        { 
+        public ICommand NumberCommand
+        {
             get;
             private set;
         }
-        public ICommand EqualCommand 
-        { 
+        public ICommand DeleteCommand
+        {
+            get;
+            private set;
+        }
+        public ICommand EqualCommand
+        {
             get;
         }
-        public ICommand PlusCommand 
-        { 
+        public ICommand PlusCommand
+        {
             get;
         }
-        public ICommand MinusCommand 
+        public ICommand MinusCommand
         {
             get;
         }
@@ -331,8 +331,13 @@ namespace calculator.ViewModels
         */
         private void ExecuteEqual()
         {
-            CalculationProcess = $"{CalculationProcess}{Result}";
-            PerformIntermediateCalculation();
+            string input = $"{CalculationProcess}{Result}";
+            string withoutSpaces = input.Replace(" ", "");
+            // 중위 표기법을 후위 표기법으로 변환
+            string postfixExpression = calculator.ConvertToPostfix(withoutSpaces);
+            // 후위 표기법을 사용하여 연산 수행
+            intermediateResult = calculator.EvaluatePostfix(postfixExpression);
+
             currentOperation = null;
             if (intermediateResult.ToString() == "NaN")
             {
@@ -345,6 +350,7 @@ namespace calculator.ViewModels
             intermediateResult = 0;
             CalculationProcess = "";
         }
+
         /**
         * @brief 함수 연산 수행
         * @return 없음
