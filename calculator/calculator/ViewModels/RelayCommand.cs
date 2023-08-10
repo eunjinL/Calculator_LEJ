@@ -20,6 +20,12 @@ namespace calculator.ViewModels
             _execute = execute ?? throw new ArgumentNullException(nameof(execute));
             _canExecute = canExecute;
         }
+
+        // 파라미터가 없는 액션을 위한 오버로드 생성자
+        public RelayCommand(Action execute, Predicate<object> canExecute = null)
+            : this(o => execute(), canExecute)
+        {
+        }
         #endregion
 
         public event EventHandler CanExecuteChanged
@@ -38,7 +44,7 @@ namespace calculator.ViewModels
         {
             _execute(parameter);
         }
+
         #endregion
     }
-
 }

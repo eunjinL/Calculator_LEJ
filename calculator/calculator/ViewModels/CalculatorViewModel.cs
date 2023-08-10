@@ -86,12 +86,35 @@ namespace calculator.ViewModels
         }
         public ICommand FractionCommand
         {
-            get; private set;
+            get;
+            private set;
         }
         public ICommand SquareCommand
         {
-            get; private set;
+            get;
+            private set;
         }
+        public ICommand SquareRootCommand
+        {
+            get;
+            private set;
+        }
+        public ICommand SinCommand
+        {
+            get;
+            set;
+        }
+        public ICommand CosCommand
+        {
+            get;
+            set;
+        }
+        public ICommand PercentCommand
+        {
+            get;
+            set;
+        }
+
         #endregion
 
         #region [생성자]
@@ -109,6 +132,10 @@ namespace calculator.ViewModels
             SymbolCommand = new RelayCommand(ExecuteSymbol);
             FractionCommand = new RelayCommand(ExecuteFraction);
             SquareCommand = new RelayCommand(ExecuteSquare);
+            SquareRootCommand = new RelayCommand(ExecuteSquareRoot);
+            SinCommand = new RelayCommand(ExecuteSin);
+            CosCommand = new RelayCommand(ExecuteCos);
+            PercentCommand = new RelayCommand(ExecutePercent);
         }
         #endregion
 
@@ -137,7 +164,7 @@ namespace calculator.ViewModels
         * @note Patch-notes
         * 2023-08-09|이은진|결과창과 과정창을 리셋
         */
-        private void ExecuteDelete(object parameter)
+        private void ExecuteDelete()
         {
             if (Result.Length > 0)
             {
@@ -147,11 +174,10 @@ namespace calculator.ViewModels
         }
         /**
         * @brief 덧셈 연산 수행
-        * @param parameter - 추가할 숫자 문자열
         * @note Patch-notes
         * 2023-08-09|이은진|덧셈 연산 수행
         */
-        private void ExecutePlus(object parameter)
+        private void ExecutePlus()
         {
             PerformIntermediateCalculation();
             currentOperation = "Add";
@@ -159,11 +185,10 @@ namespace calculator.ViewModels
         }
         /**
         * @brief 뺄셈 연산 수행
-        * @param parameter - 추가할 숫자 문자열
         * @note Patch-notes
         * 2023-08-09|이은진|뺄셈 연산 수행
         */
-        private void ExecuteMinus(object parameter)
+        private void ExecuteMinus()
         {
             PerformIntermediateCalculation();
             currentOperation = "Subtract";
@@ -171,11 +196,10 @@ namespace calculator.ViewModels
         }
         /**
         * @brief 곱셈 연산 수행
-        * @param parameter - 추가할 숫자 문자열
         * @note Patch-notes
         * 2023-08-09|이은진|곱셈 연산 수행
         */
-        private void ExecuteMultiply(object parameter)
+        private void ExecuteMultiply()
         {
             PerformIntermediateCalculation();
             currentOperation = "Multiply";
@@ -187,7 +211,7 @@ namespace calculator.ViewModels
         * @note Patch-notes
         * 2023-08-09|이은진|나눗셈 연산 수행
         */
-        private void ExecuteDivide(object parameter)
+        private void ExecuteDivide()
         {
             PerformIntermediateCalculation();
             currentOperation = "Divide";
@@ -195,11 +219,10 @@ namespace calculator.ViewModels
         }
         /**
         * @brief 소수점 추가
-        * @param parameter - 추가할 숫자 문자열
         * @note Patch-notes
         * 2023-08-09|이은진|현재 입력된 숫자의 뒤에 소수점 추가, 입력된 숫자가 없을 경우에는 0.으로 가정
         */
-        private void ExecuteDot(object parameter)
+        private void ExecuteDot()
         {
             if (string.IsNullOrEmpty(Result) || !Result.Contains("."))
             {
@@ -215,11 +238,10 @@ namespace calculator.ViewModels
         }
         /**
         * @brief 부호 변경
-        * @param parameter - 추가할 숫자 문자열
         * @note Patch-notes
         * 2023-08-09|이은진|현재 입력된 숫자의 부호를 변경하기
         */
-        private void ExecuteSymbol(object parameter)
+        private void ExecuteSymbol()
         {
             if (!string.IsNullOrEmpty(Result) && double.TryParse(Result, out var number))
             {
@@ -228,10 +250,51 @@ namespace calculator.ViewModels
             }
         }
         /**
-        * @brief 중간 연산 수행
-        * @param parameter - 추가할 숫자 문자열
+        * @brief Sin 연산 수행
+        * @return 없음
         * @note Patch-notes
-        * 2023-08-09|이은진|중간 연산 수행
+        * 2023-08-10|이은진|Sin 연산 코드 작성
+        */
+        public void ExecuteSin()
+        {
+            if (double.TryParse(Result, out var number))
+            {
+                var result = calculator.Sin(number);
+                Result = result.ToString();
+            }
+        }
+        /**
+        * @brief Cos 연산 수행
+        * @return 없음
+        * @note Patch-notes
+        * 2023-08-10|이은진|Cos 연산 코드 작성
+        */
+        public void ExecuteCos()
+        {
+            if (double.TryParse(Result, out var number))
+            {
+                var result = calculator.Cos(number);
+                Result = result.ToString();
+            }
+        }
+        /**
+        * @brief Percent 연산 수행
+        * @return 없음
+        * @note Patch-notes
+        * 2023-08-10|이은진|Percent 연산 코드 작성
+        */
+        public void ExecutePercent()
+        {
+            if (double.TryParse(Result, out var number))
+            {
+                var result = calculator.Percent(number);
+                Result = result.ToString();
+            }
+        }
+        /**
+        * @brief 중간 연산 수행
+        * @note Patch-notes
+        * 2023-08-09|이은진|연산자를 누를때 해당 기능 연산 함수 호출
         */
         private void PerformIntermediateCalculation()
         {
@@ -263,11 +326,10 @@ namespace calculator.ViewModels
         }
         /**
         * @brief 등호 연산 수행 및 결과 표시
-        * @param parameter - 추가할 숫자 문자열
         * @note Patch-notes
         * 2023-08-09|이은진|등호 연산 수행 및 화면에 표시, 0으로 나눌 경우 경고메세지가 뜨도록 설정
         */
-        private void ExecuteEqual(object parameter)
+        private void ExecuteEqual()
         {
             CalculationProcess = $"{CalculationProcess}{Result}";
             PerformIntermediateCalculation();
@@ -283,7 +345,13 @@ namespace calculator.ViewModels
             intermediateResult = 0;
             CalculationProcess = "";
         }
-        private void ExecuteFraction(object parameter)
+        /**
+        * @brief 함수 연산 수행
+        * @return 없음
+        * @note Patch-notes
+        * 2023-08-10|이은진|Fraction 연산 코드 작성
+        */
+        private void ExecuteFraction()
         {
             if (double.TryParse(Result, out var number))
             {
@@ -298,15 +366,40 @@ namespace calculator.ViewModels
                 }
             }
         }
-
-        private void ExecuteSquare(object parameter)
+        /**
+        * @brief 제곱 연산 수행
+        * @return 없음
+        * @note Patch-notes
+        * 2023-08-10|이은진|Square 연산 코드 작성
+        */
+        private void ExecuteSquare()
         {
             if (double.TryParse(Result, out var number))
             {
                 Result = calculator.Square(number).ToString();
             }
         }
-
+        /**
+        * @brief 제곱근 연산 수행
+        * @return 없음
+        * @note Patch-notes
+        * 2023-08-10|이은진|Square 연산 코드 작성
+        */
+        private void ExecuteSquareRoot()
+        {
+            if (double.TryParse(Result, out var number))
+            {
+                var result = calculator.SquareRoot(number);
+                if (double.IsNaN(result))
+                {
+                    Result = "음수에 대한 제곱근의 제곱은 정의되지 않습니다.";
+                }
+                else
+                {
+                    Result = result.ToString();
+                }
+            }
+        }
         /**
         * @brief 속성 변경 알림 이벤트 발생
         * @param parameter - 변경된 속성의 이름
