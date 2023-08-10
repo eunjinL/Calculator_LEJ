@@ -23,5 +23,6 @@ namespace calculator.Views
         {
             InitializeComponent();
         }
+
     }
 }

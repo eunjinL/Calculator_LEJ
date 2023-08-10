@@ -22,7 +22,10 @@ namespace calculator.ViewModels
         #region [속성]
         public string Result
         {
-            get { return result; }
+            get 
+            { 
+                return result; 
+            }
             set
             {
                 result = value;
@@ -41,21 +44,59 @@ namespace calculator.ViewModels
                 OnPropertyChanged(nameof(CalculationProcess));
             }
         }
-        public ICommand NumberCommand { get; private set; }
-        public ICommand DeleteCommand { get; private set; }
-        public ICommand EqualCommand { get; }
-        public ICommand PlusCommand { get; }
-        public ICommand MinusCommand { get; }
-        public ICommand MultiplyCommand { get; }
-        public ICommand DivideCommand { get; }
-        public ICommand DotCommand { get; private set; }
-        public ICommand SymbolCommand { get; private set; }
+        public ICommand NumberCommand 
+        { 
+            get; 
+            private set; 
+        }
+        public ICommand DeleteCommand 
+        { 
+            get;
+            private set;
+        }
+        public ICommand EqualCommand 
+        { 
+            get;
+        }
+        public ICommand PlusCommand 
+        { 
+            get;
+        }
+        public ICommand MinusCommand 
+        {
+            get;
+        }
+        public ICommand MultiplyCommand
+        {
+            get;
+        }
+        public ICommand DivideCommand
+        {
+            get;
+        }
+        public ICommand DotCommand
+        {
+            get;
+            private set;
+        }
+        public ICommand SymbolCommand
+        {
+            get;
+            private set;
+        }
+        public ICommand FractionCommand
+        {
+            get; private set;
+        }
+        public ICommand SquareCommand
+        {
+            get; private set;
+        }
         #endregion
 
         #region [생성자]
         public CalculatorViewModel()
         {
-            // 생성자에서 연산자 커멘드 초기화
             calculator = new CalculatorModel();
             NumberCommand = new RelayCommand(ExecuteNumber);
             DeleteCommand = new RelayCommand(ExecuteDelete);
@@ -66,6 +107,8 @@ namespace calculator.ViewModels
             DivideCommand = new RelayCommand(ExecuteDivide);
             DotCommand = new RelayCommand(ExecuteDot);
             SymbolCommand = new RelayCommand(ExecuteSymbol);
+            FractionCommand = new RelayCommand(ExecuteFraction);
+            SquareCommand = new RelayCommand(ExecuteSquare);
         }
         #endregion
 
@@ -240,6 +283,30 @@ namespace calculator.ViewModels
             intermediateResult = 0;
             CalculationProcess = "";
         }
+        private void ExecuteFraction(object parameter)
+        {
+            if (double.TryParse(Result, out var number))
+            {
+                var result = calculator.Fraction(number);
+                if (double.IsNaN(result))
+                {
+                    Result = "0으로 나눌 수 없습니다.";
+                }
+                else
+                {
+                    Result = result.ToString();
+                }
+            }
+        }
+
+        private void ExecuteSquare(object parameter)
+        {
+            if (double.TryParse(Result, out var number))
+            {
+                Result = calculator.Square(number).ToString();
+            }
+        }
+
         /**
         * @brief 속성 변경 알림 이벤트 발생
         * @param parameter - 변경된 속성의 이름
