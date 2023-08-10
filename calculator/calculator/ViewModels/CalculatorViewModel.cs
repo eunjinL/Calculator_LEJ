@@ -22,9 +22,9 @@ namespace calculator.ViewModels
         #region [속성]
         public string Result
         {
-            get
-            {
-                return result;
+            get 
+            { 
+                return result; 
             }
             set
             {
@@ -44,25 +44,25 @@ namespace calculator.ViewModels
                 OnPropertyChanged(nameof(CalculationProcess));
             }
         }
-        public ICommand NumberCommand
-        {
+        public ICommand NumberCommand 
+        { 
+            get; 
+            private set; 
+        }
+        public ICommand DeleteCommand 
+        { 
             get;
             private set;
         }
-        public ICommand DeleteCommand
-        {
-            get;
-            private set;
-        }
-        public ICommand EqualCommand
-        {
+        public ICommand EqualCommand 
+        { 
             get;
         }
-        public ICommand PlusCommand
-        {
+        public ICommand PlusCommand 
+        { 
             get;
         }
-        public ICommand MinusCommand
+        public ICommand MinusCommand 
         {
             get;
         }
@@ -294,7 +294,7 @@ namespace calculator.ViewModels
         /**
         * @brief 중간 연산 수행
         * @note Patch-notes
-        * 2023-08-09|이은진|연산자를 누를때 해당 기능 연산 함수 호출
+        * 2023-08-09|이은진|연산자를 누를때 입력된 피연산자 숫자와 함께 계산 과정에 추가하고, 결과창 비움
         */
         private void PerformIntermediateCalculation()
         {
@@ -302,30 +302,12 @@ namespace calculator.ViewModels
             {
                 double operand = double.Parse(Result);
 
-                switch (currentOperation)
-                {
-                    case "Add":
-                        intermediateResult = calculator.Add(intermediateResult, operand);
-                        break;
-                    case "Subtract":
-                        intermediateResult = calculator.Subtract(intermediateResult, operand);
-                        break;
-                    case "Multiply":
-                        intermediateResult = calculator.Multiply(intermediateResult, operand);
-                        break;
-                    case "Divide":
-                        intermediateResult = calculator.Divide(intermediateResult, operand);
-                        break;
-                    default:
-                        intermediateResult = operand;
-                        break;
-                }
                 CalculationProcess = $"{CalculationProcess}{Result}";
                 Result = "";
             }
         }
         /**
-        * @brief 등호 연산 수행 및 결과 표시
+        * @brief 등호 연산 수행, 입력된 계산 과정을 합쳐서 최종 수식을 만들고, 중위 표기법에서 후위 표기법으로 바꿈, 연산 결과 출력 후 계산 과정을 비움
         * @note Patch-notes
         * 2023-08-09|이은진|등호 연산 수행 및 화면에 표시, 0으로 나눌 경우 경고메세지가 뜨도록 설정
         */

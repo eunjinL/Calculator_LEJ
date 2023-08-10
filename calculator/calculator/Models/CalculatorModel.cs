@@ -152,7 +152,13 @@ namespace calculator.Models
         {
             return value / 100;
         }
-
+        /**
+        * @brief 중위 표기법을 후위 표기법으로 변환
+        * @param infix - 중위 표기법으로 표현된 수식
+        * @return 후위 표기법으로 변환된 수식 문자열 반환
+        * @note Patch-notes
+        * 2023-08-11|이은진|중위를 후위 표기법으로 변환
+        */
         public string ConvertToPostfix(string infix)
         {
             Stack<char> operatorStack = new Stack<char>();
@@ -164,15 +170,12 @@ namespace calculator.Models
 
                 if (char.IsDigit(token) || token == '.')
                 {
-                    // 숫자를 계속 누적합니다.
                     postfix.Append(token);
                 }
                 else
                 {
-                    // 숫자가 끝나면 공백을 추가합니다.
                     postfix.Append(" ");
 
-                    // 현재 연산자의 우선순위가 스택의 맨 위 연산자보다 낮거나 같다면, 스택에서 꺼내 후위 표기식에 추가합니다.
                     while (operatorStack.Count > 0 && Precedence(token) <= Precedence(operatorStack.Peek()))
                     {
                         postfix.Append(operatorStack.Pop() + " ");
@@ -181,24 +184,27 @@ namespace calculator.Models
                 }
             }
 
-            // 마지막 숫자에 공백을 추가합니다.
             postfix.Append(" ");
 
-            // 남은 연산자를 꺼내 후위 표기식에 추가합니다.
             while (operatorStack.Count > 0)
             {
                 char operatorSymbol = operatorStack.Pop();
                 if (Precedence(operatorSymbol) == -1)
                 {
-                    throw new ArgumentException("Invalid operator symbol");
+                    throw new ArgumentException("연산 기호 오류");
                 }
                 postfix.Append(operatorSymbol + " ");
             }
 
             return postfix.ToString().Trim();
         }
-
-
+        /**
+        * @brief 연산자의 우선순위를 반환
+        * @param operatorSymbol - 우선순위를 판별할 연산자 기호
+        * @return 연산자의 우선순위 반환 (덧셈과 뺄셈은 1, 곱셈과 나눗셈은 2)
+        * @note Patch-notes
+        * 2023-08-11|이은진|연산자 우선순위 판별
+        */
         public int Precedence(char operatorSymbol)
         {
             switch (operatorSymbol)
@@ -210,10 +216,16 @@ namespace calculator.Models
                 case '/':
                     return 2;
                 default:
-                    throw new ArgumentException("Invalid operator symbol");
+                    throw new ArgumentException("연산 기호 오류");
             }
         }
-
+        /**
+        * @brief 후위 표기법 수식을 계산
+        * @param postfix - 후위 표기법으로 표현된 수식
+        * @return 계산된 결과값 반환
+        * @note Patch-notes
+        * 2023-08-11|이은진|후위 표기법 수식 계산
+        */
         public double EvaluatePostfix(string postfix)
         {
             Stack<double> operandStack = new Stack<double>();
@@ -226,8 +238,8 @@ namespace calculator.Models
                 }
                 else
                 {
-                    double operand2 = operandStack.Pop(); // 두 번째 피연산자
-                    double operand1 = operandStack.Pop(); // 첫 번째 피연산자
+                    double operand2 = operandStack.Pop(); 
+                    double operand1 = operandStack.Pop(); 
                     double result = Operate(operand1, operand2, token[0]);
                     operandStack.Push(result);
                 }
@@ -235,28 +247,29 @@ namespace calculator.Models
 
             return operandStack.Pop();
         }
-
+        /**
+        * @brief 두 피연산자에 연산자를 적용
+        * @param operand1 - 첫 번째 피연산자
+        * @param operand2 - 두 번째 피연산자
+        * @param operatorSymbol - 적용할 연산자 기호
+        * @return 두 피연산자에 연산자를 적용한 결과 반환
+        * @note Patch-notes
+        * 2023-08-11|이은진|연산자 적용
+        */
         public double Operate(double operand1, double operand2, char operatorSymbol)
         {
             switch (operatorSymbol)
             {
                 case '+':
-                    return operand1 + operand2;
+                    return Add(operand1, operand2);
                 case '-':
-                    return operand1 - operand2;
+                    return Subtract(operand1, operand2);
                 case 'x':
-                    return operand1 * operand2;
+                    return Multiply(operand1, operand2);
                 case '/':
-                    if (operand2 != 0)
-                    {
-                        return operand1 / operand2;
-                    }
-                    else
-                    {
-                        throw new DivideByZeroException("Division by zero");
-                    }
+                    return Divide(operand1, operand2);
                 default:
-                    throw new ArgumentException("Invalid operator symbol");
+                    throw new ArgumentException("연산 기호 오류");
             }
         }
     }
