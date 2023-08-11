@@ -256,18 +256,18 @@ namespace calculator.Models
         * @note Patch-notes
         * 2023-08-11|이은진|연산자 적용
         */
-        public double Operate(double operand1, double operand2, char operatorSymbol)
+        public double Operate(double value1, double value2, char operatorSymbol)
         {
             switch (operatorSymbol)
             {
                 case '+':
-                    return Add(operand1, operand2);
+                    return Add(value1, value2);
                 case '-':
-                    return Subtract(operand1, operand2);
+                    return Subtract(value1, value2);
                 case 'x':
-                    return Multiply(operand1, operand2);
+                    return Multiply(value1, value2);
                 case '/':
-                    return Divide(operand1, operand2);
+                    return Divide(value1, value2);
                 default:
                     throw new ArgumentException("연산 기호 오류");
             }
