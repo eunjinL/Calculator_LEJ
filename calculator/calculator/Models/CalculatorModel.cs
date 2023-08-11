@@ -189,7 +189,7 @@ namespace calculator.Models
             while (operatorStack.Count > 0)
             {
                 char operatorSymbol = operatorStack.Pop();
-                if (Precedence(operatorSymbol) == -1)
+                if (Precedence(operatorSymbol) != 2 && Precedence(operatorSymbol) != 1)
                 {
                     throw new ArgumentException("연산 기호 오류");
                 }
@@ -238,8 +238,8 @@ namespace calculator.Models
                 }
                 else
                 {
-                    double operand2 = operandStack.Pop(); 
-                    double operand1 = operandStack.Pop(); 
+                    double operand2 = operandStack.Pop();
+                    double operand1 = operandStack.Pop();
                     double result = Operate(operand1, operand2, token[0]);
                     operandStack.Push(result);
                 }

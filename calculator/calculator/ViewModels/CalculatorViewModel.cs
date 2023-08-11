@@ -315,9 +315,7 @@ namespace calculator.ViewModels
         {
             string input = $"{CalculationProcess}{Result}";
             string withoutSpaces = input.Replace(" ", "");
-            // 중위 표기법을 후위 표기법으로 변환
             string postfixExpression = calculator.ConvertToPostfix(withoutSpaces);
-            // 후위 표기법을 사용하여 연산 수행
             intermediateResult = calculator.EvaluatePostfix(postfixExpression);
 
             currentOperation = null;
@@ -332,7 +330,6 @@ namespace calculator.ViewModels
             intermediateResult = 0;
             CalculationProcess = "";
         }
-
         /**
         * @brief 함수 연산 수행
         * @return 없음
