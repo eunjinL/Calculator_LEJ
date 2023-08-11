@@ -10,15 +10,15 @@ namespace calculator.ViewModels
     public class RelayCommand : ICommand
     {
         #region [필드]
-        private readonly Action<object> _execute;
-        private readonly Predicate<object> _canExecute;
+        private readonly Action<object> execute;
+        private readonly Predicate<object> canExecute;
         #endregion
 
         #region [생성자]
         public RelayCommand(Action<object> execute, Predicate<object> canExecute = null)
         {
-            _execute = execute ?? throw new ArgumentNullException(nameof(execute));
-            _canExecute = canExecute;
+            this.execute = execute ?? throw new ArgumentNullException(nameof(execute));
+            this.canExecute = canExecute;
         }
 
         // 파라미터가 없는 액션을 위한 오버로드 생성자
@@ -37,12 +37,12 @@ namespace calculator.ViewModels
         #region [public 메서드]
         public bool CanExecute(object parameter)
         {
-            return _canExecute == null || _canExecute(parameter);
+            return canExecute == null || canExecute(parameter);
         }
 
         public void Execute(object parameter)
         {
-            _execute(parameter);
+            execute(parameter);
         }
 
         #endregion
