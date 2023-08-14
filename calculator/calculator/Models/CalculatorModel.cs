@@ -30,7 +30,8 @@ namespace calculator.Models
         */
         public double Subtract(double value1, double value2)
         {
-            return value1 - value2;
+            double result = value1 - value2;
+            return Math.Round(result, 5);
         }
         /**
         * @brief 두 수를 곱한다

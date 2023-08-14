@@ -101,7 +101,7 @@ namespace calculator.ViewModels
             get;
             private set;
         }
-        public ICommand EqualCommand 
+        public ICommand EqualCommand
         { 
             get;
         }
