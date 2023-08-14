@@ -158,6 +158,7 @@ namespace calculator.Models
         * @return 후위 표기법으로 변환된 수식 문자열 반환
         * @note Patch-notes
         * 2023-08-11|이은진|중위를 후위 표기법으로 변환
+        * 2023-08-14|이은진|후위 표기법으로 변환 시 음수는 연산자가 아니라 부호로 인식되게 변경
         */
         public string ConvertToPostfix(string infix)
         {
@@ -169,6 +170,10 @@ namespace calculator.Models
                 char token = infix[i];
 
                 if (char.IsDigit(token) || token == '.')
+                {
+                    postfix.Append(token);
+                }
+                else if (token == '-' && (i == 0 || !char.IsDigit(infix[i - 1])))
                 {
                     postfix.Append(token);
                 }
@@ -188,16 +193,12 @@ namespace calculator.Models
 
             while (operatorStack.Count > 0)
             {
-                char operatorSymbol = operatorStack.Pop();
-                if (Precedence(operatorSymbol) != 2 && Precedence(operatorSymbol) != 1)
-                {
-                    throw new ArgumentException("연산 기호 오류");
-                }
-                postfix.Append(operatorSymbol + " ");
+                postfix.Append(operatorStack.Pop() + " ");
             }
 
             return postfix.ToString().Trim();
         }
+
         /**
         * @brief 연산자의 우선순위를 반환
         * @param operatorSymbol - 우선순위를 판별할 연산자 기호

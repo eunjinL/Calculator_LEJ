@@ -9,7 +9,12 @@
     <Window.DataContext>
         <local:CalculatorViewModel />
     </Window.DataContext>
-    <Grid HorizontalAlignment="Left" Width="400">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </Window.Resources>
+    <Grid 
+        HorizontalAlignment="Left" 
+        Width="400">
         <Grid.RowDefinitions>
             <RowDefinition Height="200" />
             <RowDefinition Height="65" />
@@ -25,6 +30,37 @@
             <ColumnDefinition Width="100" />
             <ColumnDefinition Width="100" />
         </Grid.ColumnDefinitions>
+        <!--History 버튼-->
+        <Button x:Name="HistoryBtn"
+                Grid.Column="3"
+                Content="H"
+                Margin="50,5,5,150"
+                Foreground="Black"
+                Background="#D3D3D3"
+                FontSize="20"
+                Command="{Binding HistoryCommand}">
+        </Button>
+        
+        <!-- 계산 기록 리스트뷰 -->
+        <ListView x:Name="HistoryListView"
+                  Canvas.ZIndex="1"
+                  Grid.Row="1" 
+                  Grid.RowSpan="6"
+                  Grid.ColumnSpan="4"
+                  ItemsSource="{Binding HistoryItems}"
+                  Visibility="{Binding IsHistoryVisible,
+					            Converter={StaticResource BooleanToVisibilityConverter}, 
+                                FallbackValue=Hidden}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn 
+                            Width="Auto"
+                            Header="과거 계산 기록" 
+                            DisplayMemberBinding="{Binding HistoryText}" />
+                    </GridView>
+                </ListView.View>    
+        </ListView>
+
         <!--연산 과정 출력 창-->
         <TextBlock x:Name="processTextBox"
                    Grid.ColumnSpan="4"

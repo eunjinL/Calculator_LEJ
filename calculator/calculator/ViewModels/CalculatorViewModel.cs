@@ -1,6 +1,7 @@
 ﻿using calculator.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -17,6 +18,9 @@ namespace calculator.ViewModels
         private string currentOperation;
         private string calculationProcess = "";
         private string result = "";
+        private bool isHistoryVisible;
+        private ObservableCollection<HistoryItem> historyItems = new ObservableCollection<HistoryItem>();
+
         #endregion
 
         #region [속성]
@@ -44,6 +48,21 @@ namespace calculator.ViewModels
                 OnPropertyChanged(nameof(CalculationProcess));
             }
         }
+        public bool IsHistoryVisible
+        {
+            get { return isHistoryVisible; }
+            set
+            {
+                isHistoryVisible = value;
+                OnPropertyChanged(nameof(IsHistoryVisible));
+            }
+        }
+        public ObservableCollection<HistoryItem> HistoryItems
+        {
+            get { return historyItems; }
+        }
+
+        public ICommand HistoryCommand { get; }
         public ICommand NumberCommand 
         { 
             get; 
@@ -136,6 +155,7 @@ namespace calculator.ViewModels
             SinCommand = new RelayCommand(ExecuteSin);
             CosCommand = new RelayCommand(ExecuteCos);
             PercentCommand = new RelayCommand(ExecutePercent);
+            HistoryCommand = new RelayCommand(ToggleHistory);
         }
         #endregion
 
@@ -295,13 +315,18 @@ namespace calculator.ViewModels
         * @brief 중간 연산 수행
         * @note Patch-notes
         * 2023-08-09|이은진|연산자를 누를때 입력된 피연산자 숫자와 함께 계산 과정에 추가하고, 결과창 비움
+        * 2023-08-14|이은진|숫자가 들어오지 않은 상태에서 연산자만 들어오면, 앞에 0을 붙여줌 
         */
         private void PerformIntermediateCalculation()
         {
-            if (result != "")
+            if (string.IsNullOrEmpty(Result))
+            {
+                CalculationProcess = $"{CalculationProcess}0";
+                Result = "";
+            }
+            else
             {
                 double operand = double.Parse(Result);
-
                 CalculationProcess = $"{CalculationProcess}{Result}";
                 Result = "";
             }
@@ -310,10 +335,15 @@ namespace calculator.ViewModels
         * @brief 등호 연산 수행, 입력된 계산 과정을 합쳐서 최종 수식을 만들고, 중위 표기법에서 후위 표기법으로 바꿈, 연산 결과 출력 후 계산 과정을 비움
         * @note Patch-notes
         * 2023-08-09|이은진|등호 연산 수행 및 화면에 표시, 0으로 나눌 경우 경고메세지가 뜨도록 설정
+        * 2023-08-14|이은진|연산자가 마지막으로 들어오면 해당 연산자를 string 에서 빼버리고 시작하도록 수정
         */
         private void ExecuteEqual()
         {
-            string input = $"{CalculationProcess}{Result}";
+            string input = $"{CalculationProcess}{Result}".TrimEnd();
+            if ("+-*/".Contains(input.Last()))
+            {
+                input = input.Remove(input.Length - 1);
+            }
             string withoutSpaces = input.Replace(" ", "");
             string postfixExpression = calculator.ConvertToPostfix(withoutSpaces);
             intermediateResult = calculator.EvaluatePostfix(postfixExpression);
@@ -327,6 +357,7 @@ namespace calculator.ViewModels
             {
                 Result = intermediateResult.ToString();
             }
+            historyItems.Add(new HistoryItem { HistoryText = input + " = " + Result });
             intermediateResult = 0;
             CalculationProcess = "";
         }
@@ -384,6 +415,16 @@ namespace calculator.ViewModels
                     Result = result.ToString();
                 }
             }
+        }
+        /**
+        * @brief History 버튼 클릭시 리스트뷰 보이게 하기
+        * @return 없음
+        * @note Patch-notes
+        * 2023-08-14|이은진|연산 기록 보이게
+        */
+        private void ToggleHistory()
+        {
+            IsHistoryVisible = !IsHistoryVisible;
         }
         /**
         * @brief 속성 변경 알림 이벤트 발생
