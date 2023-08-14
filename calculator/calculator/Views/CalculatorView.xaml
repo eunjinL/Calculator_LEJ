@@ -12,6 +12,52 @@
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </Window.Resources>
+    <Window.InputBindings>
+        <!--사칙 연산, 소수점-->
+        <KeyBinding Key="Decimal" Command="{Binding DotCommand}"/>
+        <KeyBinding Key="OemPeriod" Command="{Binding DotCommand}"/>
+        
+        <KeyBinding Key="Add" Command="{Binding PlusCommand}"/>
+        <KeyBinding Key="Subtract" Command="{Binding MinusCommand}"/>
+        <KeyBinding Key="Divide" Command="{Binding DivideCommand}"/>
+        <KeyBinding Key="Multiply" Command="{Binding MultiplyCommand}"/>
+
+        <KeyBinding Modifiers="Shift" Key="OemPlus" Command="{Binding PlusCommand}"/>
+        <KeyBinding Key="OemMinus" Command="{Binding MinusCommand}"/>
+        <KeyBinding Key="OemQuestion" Command="{Binding DivideCommand}"/>
+        <KeyBinding Modifiers="Shift" Key="D8" Command="{Binding MultiplyCommand}"/>
+        <KeyBinding Key="X" Command="{Binding MultiplyCommand}"/>
+        <!--결과, 지우기-->
+        <KeyBinding Key="OemPlus" Command="{Binding EqualCommand}"/>
+        <KeyBinding Key="Enter" Command="{Binding EqualCommand}"/>
+        <KeyBinding Key="C" Command="{Binding DeleteCommand}"/>
+        <KeyBinding Key="Back" Command="{Binding BackCommand}"/>
+        <KeyBinding Key="Delete" Command="{Binding DeleteCommand}"/>
+        <!--숫자-->
+        <local:KeyBindingWithParameter Key="D0" Command="{Binding NumberCommand}" CommandParameter="0"/>
+        <local:KeyBindingWithParameter Key="D1" Command="{Binding NumberCommand}" CommandParameter="1"/>
+        <local:KeyBindingWithParameter Key="D2" Command="{Binding NumberCommand}" CommandParameter="2"/>
+        <local:KeyBindingWithParameter Key="D3" Command="{Binding NumberCommand}" CommandParameter="3"/>
+        <local:KeyBindingWithParameter Key="D4" Command="{Binding NumberCommand}" CommandParameter="4"/>
+        <local:KeyBindingWithParameter Key="D5" Command="{Binding NumberCommand}" CommandParameter="5"/>
+        <local:KeyBindingWithParameter Key="D6" Command="{Binding NumberCommand}" CommandParameter="6"/>
+        <local:KeyBindingWithParameter Key="D7" Command="{Binding NumberCommand}" CommandParameter="7"/>
+        <local:KeyBindingWithParameter Key="D8" Command="{Binding NumberCommand}" CommandParameter="8"/>
+        <local:KeyBindingWithParameter Key="D9" Command="{Binding NumberCommand}" CommandParameter="9"/>
+        <local:KeyBindingWithParameter Key="NumPad0" Command="{Binding NumberCommand}" CommandParameter="0"/>
+        <local:KeyBindingWithParameter Key="NumPad1" Command="{Binding NumberCommand}" CommandParameter="1"/>
+        <local:KeyBindingWithParameter Key="NumPad2" Command="{Binding NumberCommand}" CommandParameter="2"/>
+        <local:KeyBindingWithParameter Key="NumPad3" Command="{Binding NumberCommand}" CommandParameter="3"/>
+        <local:KeyBindingWithParameter Key="NumPad4" Command="{Binding NumberCommand}" CommandParameter="4"/>
+        <local:KeyBindingWithParameter Key="NumPad5" Command="{Binding NumberCommand}" CommandParameter="5"/>
+        <local:KeyBindingWithParameter Key="NumPad6" Command="{Binding NumberCommand}" CommandParameter="6"/>
+        <local:KeyBindingWithParameter Key="NumPad7" Command="{Binding NumberCommand}" CommandParameter="7"/>
+        <local:KeyBindingWithParameter Key="NumPad8" Command="{Binding NumberCommand}" CommandParameter="8"/>
+        <local:KeyBindingWithParameter Key="NumPad9" Command="{Binding NumberCommand}" CommandParameter="9"/>
+        <!--복사, 붙여넣기-->
+        <KeyBinding Modifiers="Ctrl" Key="C" Command="{Binding CopyCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="V" Command="{Binding PasteCommand}"/>
+    </Window.InputBindings>
     <Grid 
         HorizontalAlignment="Left" 
         Width="400">
@@ -33,14 +79,14 @@
         <!--History 버튼-->
         <Button x:Name="HistoryBtn"
                 Grid.Column="3"
-                Content="H"
-                Margin="50,5,5,150"
-                Foreground="Black"
-                Background="#D3D3D3"
-                FontSize="20"
-                Command="{Binding HistoryCommand}">
+                Margin="65,5,5,160"
+                Command="{Binding HistoryCommand}"
+                Background="Transparent"
+                BorderBrush="Transparent">
+            <Image Source="../Images/ic_history.png" Width="20" Height="20" />
         </Button>
-        
+
+
         <!-- 계산 기록 리스트뷰 -->
         <ListView x:Name="HistoryListView"
                   Canvas.ZIndex="1"
@@ -48,21 +94,23 @@
                   Grid.RowSpan="6"
                   Grid.ColumnSpan="4"
                   ItemsSource="{Binding HistoryItems}"
+                  SelectedItem="{Binding SelectedHistoryItem, Mode=TwoWay}"
                   Visibility="{Binding IsHistoryVisible,
 					            Converter={StaticResource BooleanToVisibilityConverter}, 
                                 FallbackValue=Hidden}">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn 
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn 
                             Width="Auto"
                             Header="과거 계산 기록" 
                             DisplayMemberBinding="{Binding HistoryText}" />
-                    </GridView>
-                </ListView.View>    
+                </GridView>
+            </ListView.View>
         </ListView>
 
         <!--연산 과정 출력 창-->
         <TextBlock x:Name="processTextBox"
+                   Focusable="False"
                    Grid.ColumnSpan="4"
                    Margin="10,10,20,90"
                    HorizontalAlignment="Right"
@@ -302,7 +350,7 @@
         <Button x:Name="SquareRootBtn"
                 Grid.Column="2"
                 Grid.Row="2"
-                Content="2√x"
+                Content="²√x"
                 Margin="5,5,5,5"
                 Grid.ColumnSpan="1"
                 Foreground="Black"

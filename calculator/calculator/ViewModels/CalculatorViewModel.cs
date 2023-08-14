@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace calculator.ViewModels
@@ -19,6 +20,7 @@ namespace calculator.ViewModels
         private string calculationProcess = "";
         private string result = "";
         private bool isHistoryVisible;
+        private HistoryItem selectedHistoryItem;
         private ObservableCollection<HistoryItem> historyItems = new ObservableCollection<HistoryItem>();
 
         #endregion
@@ -48,6 +50,29 @@ namespace calculator.ViewModels
                 OnPropertyChanged(nameof(CalculationProcess));
             }
         }
+        public HistoryItem SelectedHistoryItem
+        {
+            get
+            {
+                return selectedHistoryItem;
+            }
+            set
+            {
+                selectedHistoryItem = value;
+                if (selectedHistoryItem?.HistoryText != null)
+                {
+                    var historyText = selectedHistoryItem.HistoryText;
+                    var indexOfEqualSign = historyText.IndexOf('=');
+
+                    if (indexOfEqualSign != -1 && indexOfEqualSign < historyText.Length - 1)
+                    {
+                        var resultString = historyText.Substring(indexOfEqualSign + 1).Trim();
+                        Result = resultString; 
+                    }
+                }
+                OnPropertyChanged(nameof(SelectedHistoryItem));
+            }
+        }
         public bool IsHistoryVisible
         {
             get { return isHistoryVisible; }
@@ -61,7 +86,10 @@ namespace calculator.ViewModels
         {
             get { return historyItems; }
         }
-
+        
+        public ICommand BackCommand { get; }
+        public ICommand CopyCommand { get; }
+        public ICommand PasteCommand { get; }
         public ICommand HistoryCommand { get; }
         public ICommand NumberCommand 
         { 
@@ -142,6 +170,7 @@ namespace calculator.ViewModels
             calculator = new CalculatorModel();
             NumberCommand = new RelayCommand(ExecuteNumber);
             DeleteCommand = new RelayCommand(ExecuteDelete);
+            BackCommand = new RelayCommand(ExecuteBack);
             EqualCommand = new RelayCommand(ExecuteEqual);
             PlusCommand = new RelayCommand(ExecutePlus);
             MinusCommand = new RelayCommand(ExecuteMinus);
@@ -156,6 +185,8 @@ namespace calculator.ViewModels
             CosCommand = new RelayCommand(ExecuteCos);
             PercentCommand = new RelayCommand(ExecutePercent);
             HistoryCommand = new RelayCommand(ToggleHistory);
+            CopyCommand = new RelayCommand(ExecuteCopy);
+            PasteCommand = new RelayCommand(ExecutePaste);
         }
         #endregion
 
@@ -180,7 +211,6 @@ namespace calculator.ViewModels
         }
         /**
         * @brief 결과창과 과정창을 리셋
-        * @param parameter - 추가할 숫자 문자열
         * @note Patch-notes
         * 2023-08-09|이은진|결과창과 과정창을 리셋
         */
@@ -190,6 +220,18 @@ namespace calculator.ViewModels
             {
                 CalculationProcess = "";
                 Result = "";
+            }
+        }
+        /**
+        * @brief 뒤로가기, 하나 지우기 기능
+        * @note Patch-notes
+        * 2023-08-14|이은진|결과창의 숫자 하나 지우기
+        */
+        private void ExecuteBack()
+        {
+            if (Result.Length > 0)
+            {
+                Result = Result.Substring(0, Result.Length - 1);
             }
         }
         /**
@@ -425,6 +467,27 @@ namespace calculator.ViewModels
         private void ToggleHistory()
         {
             IsHistoryVisible = !IsHistoryVisible;
+        }
+        /**
+        * @brief 연산 결과 ctrl+c기능 구현
+        * @return 없음
+        * @note Patch-notes
+        * 2023-08-14|이은진|result값 복사
+        */
+        private void ExecuteCopy(object parameter)
+        {
+            Clipboard.SetText(Result);
+        }
+        /**
+        * @brief History ctrl+v기능 구현
+        * @return 없음
+        * @note Patch-notes
+        * 2023-08-14|이은진|붙여넣기 기능 구현, result에 붙여넣은 값이 들어감
+        */
+        private void ExecutePaste(object parameter)
+        {
+            string clipboardText = Clipboard.GetText();
+            Result = clipboardText.ToString();
         }
         /**
         * @brief 속성 변경 알림 이벤트 발생
