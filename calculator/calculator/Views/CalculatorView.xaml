@@ -86,7 +86,6 @@
             <Image Source="../Images/ic_history.png" Width="20" Height="20" />
         </Button>
 
-
         <!-- 계산 기록 리스트뷰 -->
         <ListView x:Name="HistoryListView"
                   Canvas.ZIndex="1"

@@ -8,6 +8,9 @@ namespace calculator.Models
 {
     public class BaseCalculatorModel
     {
+        public double IntermediateResult { get; set; }
+        public string CalculationProcess { get; set; } = "";
+        public string Result { get; set; } = "";
         /**
         * @brief 두 수를 더한다
         * @param value1 첫 번째 숫자
@@ -16,9 +19,11 @@ namespace calculator.Models
         * @note Patch-notes
         * 2023-08-09|이은진|더하기 기능
         */
-        public virtual double Add(double value1, double value2)
+        public virtual double Add(BaseCalculatorModel value1, BaseCalculatorModel value2)
         {
-            return value1 + value2;
+            double parsedValue1 = double.Parse(value1.Result);
+            double parsedValue2 = double.Parse(value2.Result);
+            return parsedValue1 + parsedValue2;
         }
         /**
         * @brief 두 수를 뺀다
@@ -28,10 +33,11 @@ namespace calculator.Models
         * @note Patch-notes
         * 2023-08-09|이은진|빼기 기능
         */
-        public virtual double Subtract(double value1, double value2)
+        public virtual double Subtract(BaseCalculatorModel value1, BaseCalculatorModel value2)
         {
-            double result = value1 - value2;
-            return Math.Round(result, 5);
+            double parsedValue1 = double.Parse(value1.Result);
+            double parsedValue2 = double.Parse(value2.Result);
+            return Math.Round(parsedValue1 - parsedValue2, 5);
         }
         /**
         * @brief 두 수를 곱한다
@@ -41,9 +47,11 @@ namespace calculator.Models
         * @note Patch-notes
         * 2023-08-09|이은진|곱하기 기능
         */
-        public virtual double Multiply(double value1, double value2)
+        public virtual double Multiply(BaseCalculatorModel value1, BaseCalculatorModel value2)
         {
-            return value1 * value2;
+            double parsedValue1 = double.Parse(value1.Result);
+            double parsedValue2 = double.Parse(value2.Result);
+            return parsedValue1 * parsedValue2;
         }
         /**
         * @brief 두 수를 나눈다
@@ -53,13 +61,15 @@ namespace calculator.Models
         * @note Patch-notes
         * 2023-08-09|이은진|나누기 기능
         */
-        public virtual double Divide(double value1, double value2)
+        public virtual double Divide(BaseCalculatorModel value1, BaseCalculatorModel value2)
         {
-            if (value2 == 0)
+            double parsedValue1 = double.Parse(value1.Result);
+            double parsedValue2 = double.Parse(value2.Result);
+            if (parsedValue2 == 0)
             {
                 return double.NaN;
             }
-            return value1 / value2;
+            return parsedValue1 / parsedValue2;
         }
     }
 }

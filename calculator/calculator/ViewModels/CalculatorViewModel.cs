@@ -14,40 +14,40 @@ namespace calculator.ViewModels
     public class CalculatorViewModel : INotifyPropertyChanged
     {
         #region [필드]
+        private AdvancedCalculator adv_calc;
         private CalculatorModel calculator;
-        private double intermediateResult;
-        private string currentOperation;
-        private string calculationProcess = "";
-        private string result = "";
         private bool isHistoryVisible;
         private HistoryItem selectedHistoryItem;
         private ObservableCollection<HistoryItem> historyItems = new ObservableCollection<HistoryItem>();
-
+        private BaseCalculatorModel calcModel = new BaseCalculatorModel();
         #endregion
 
         #region [속성]
-        public string Result
+        public double IntermediateResult
         {
-            get 
-            { 
-                return result; 
-            }
+            get { return calcModel.IntermediateResult; }
             set
             {
-                result = value;
-                OnPropertyChanged(nameof(Result));
+                calcModel.IntermediateResult = value;
+                OnPropertyChanged(nameof(IntermediateResult));
             }
         }
         public string CalculationProcess
         {
-            get
-            {
-                return calculationProcess;
-            }
+            get { return calcModel.CalculationProcess; }
             set
             {
-                calculationProcess = value;
+                calcModel.CalculationProcess = value;
                 OnPropertyChanged(nameof(CalculationProcess));
+            }
+        }
+        public string Result
+        {
+            get { return calcModel.Result; }
+            set
+            {
+                calcModel.Result = value;
+                OnPropertyChanged(nameof(Result));
             }
         }
         public HistoryItem SelectedHistoryItem
@@ -242,7 +242,6 @@ namespace calculator.ViewModels
         private void ExecutePlus()
         {
             PerformIntermediateCalculation();
-            currentOperation = "Add";
             CalculationProcess = string.Format("{0} + ", CalculationProcess);
         }
         /**
@@ -253,7 +252,6 @@ namespace calculator.ViewModels
         private void ExecuteMinus()
         {
             PerformIntermediateCalculation();
-            currentOperation = "Subtract";
             CalculationProcess = string.Format("{0} - ", CalculationProcess);
         }
         /**
@@ -264,7 +262,6 @@ namespace calculator.ViewModels
         private void ExecuteMultiply()
         {
             PerformIntermediateCalculation();
-            currentOperation = "Multiply";
             CalculationProcess = string.Format("{0} x ", CalculationProcess);
         }
         /**
@@ -276,7 +273,6 @@ namespace calculator.ViewModels
         private void ExecuteDivide()
         {
             PerformIntermediateCalculation();
-            currentOperation = "Divide";
             CalculationProcess = string.Format("{0} / ", CalculationProcess);
         }
         /**
@@ -321,7 +317,7 @@ namespace calculator.ViewModels
         {
             if (double.TryParse(Result, out var number))
             {
-                var result = calculator.Sin(number);
+                var result = adv_calc.Sin(number);
                 Result = result.ToString();
             }
         }
@@ -335,7 +331,7 @@ namespace calculator.ViewModels
         {
             if (double.TryParse(Result, out var number))
             {
-                var result = calculator.Cos(number);
+                var result = adv_calc.Cos(number);
                 Result = result.ToString();
             }
         }
@@ -349,7 +345,7 @@ namespace calculator.ViewModels
         {
             if (double.TryParse(Result, out var number))
             {
-                var result = calculator.Percent(number);
+                var result = adv_calc.Percent(number);
                 Result = result.ToString();
             }
         }
@@ -388,19 +384,18 @@ namespace calculator.ViewModels
             }
             string withoutSpaces = input.Replace(" ", "");
             string postfixExpression = calculator.ConvertToPostfix(withoutSpaces);
-            intermediateResult = calculator.EvaluatePostfix(postfixExpression);
+            IntermediateResult = calculator.EvaluatePostfix(postfixExpression);
 
-            currentOperation = null;
-            if (intermediateResult.ToString() == "NaN")
+            if (IntermediateResult.ToString() == "NaN")
             {
                 Result = "0으로 나눌 수 없습니다.";
             }
             else
             {
-                Result = intermediateResult.ToString();
+                Result = IntermediateResult.ToString();
             }
             historyItems.Add(new HistoryItem { HistoryText = input + " = " + Result });
-            intermediateResult = 0;
+            IntermediateResult = 0;
             CalculationProcess = "";
         }
         /**
@@ -413,7 +408,7 @@ namespace calculator.ViewModels
         {
             if (double.TryParse(Result, out var number))
             {
-                var result = calculator.Fraction(number);
+                var result = adv_calc.Fraction(number);
                 if (double.IsNaN(result))
                 {
                     Result = "0으로 나눌 수 없습니다.";
@@ -434,7 +429,7 @@ namespace calculator.ViewModels
         {
             if (double.TryParse(Result, out var number))
             {
-                Result = calculator.Square(number).ToString();
+                Result = adv_calc.Square(number).ToString();
             }
         }
         /**
@@ -447,7 +442,7 @@ namespace calculator.ViewModels
         {
             if (double.TryParse(Result, out var number))
             {
-                var result = calculator.SquareRoot(number);
+                var result = adv_calc.SquareRoot(number);
                 if (double.IsNaN(result))
                 {
                     Result = "음수에 대한 제곱근의 제곱은 정의되지 않습니다.";

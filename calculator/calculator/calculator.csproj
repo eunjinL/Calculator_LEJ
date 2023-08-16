@@ -78,8 +78,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\AdvancedCalculator.cs" />
     <Compile Include="Models\BaseCalculatorModel.cs" />
     <Compile Include="Models\CalculatorModel.cs" />
+    <Compile Include="Models\ComplexNumberModel.cs" />
     <Compile Include="Models\HistoryItem.cs" />
     <Compile Include="ViewModels\CalculatorViewModel.cs" />
     <Compile Include="ViewModels\KeyBindingWithParameter.cs" />
