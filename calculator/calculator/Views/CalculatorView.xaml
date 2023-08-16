@@ -28,8 +28,8 @@
         <KeyBinding Modifiers="Shift" Key="D8" Command="{Binding MultiplyCommand}"/>
         <KeyBinding Key="X" Command="{Binding MultiplyCommand}"/>
         <!--결과, 지우기-->
-        <KeyBinding Key="OemPlus" Command="{Binding EqualCommand}"/>
-        <KeyBinding Key="Enter" Command="{Binding EqualCommand}"/>
+        <KeyBinding Key="OemPlus" Command="{Binding EqualCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=EventArgs}"/>
+        <KeyBinding Key="Enter" Command="{Binding EqualCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=EventArgs}"/>
         <KeyBinding Key="C" Command="{Binding DeleteCommand}"/>
         <KeyBinding Key="Back" Command="{Binding BackCommand}"/>
         <KeyBinding Key="Delete" Command="{Binding DeleteCommand}"/>

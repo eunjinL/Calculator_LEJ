@@ -216,7 +216,7 @@ namespace calculator.ViewModels
         */
         private void ExecuteDelete()
         {
-            if (Result.Length > 0)
+            if (Result.Length > 0 || CalculationProcess.Length > 0)
             {
                 CalculationProcess = "";
                 Result = "";
