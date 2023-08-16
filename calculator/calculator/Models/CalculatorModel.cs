@@ -6,60 +6,59 @@ using System.Threading.Tasks;
 
 namespace calculator.Models
 {
-    public class CalculatorModel
+    public class CalculatorModel : BaseCalculatorModel
     {
         /**
-        * @brief 두 수를 더한다
+        * @brief 더하기 연산 재정의
         * @param value1 첫 번째 숫자
         * @param value2 두 번째 숫자
         * @return 두 숫자의 합 반환
         * @note Patch-notes
-        * 2023-08-09|이은진|더하기 기능
+        * 2023-08-16|이은진|재정의로 console 기능 추가
         */
-        public double Add(double value1, double value2)
+        public override double Add(double value1, double value2)
         {
-            return value1 + value2;
+            Console.WriteLine("더하기 연산 중...");
+            return base.Add(value1, value2);
         }
         /**
-        * @brief 두 수를 뺀다
+        * @brief 빼기 연산 재정의
         * @param value1 첫 번째 숫자
         * @param value2 두 번째 숫자
         * @return 두 숫자의 차 반환
         * @note Patch-notes
-        * 2023-08-09|이은진|빼기 기능
+        * 2023-08-16|이은진|재정의로 console 기능 추가
         */
-        public double Subtract(double value1, double value2)
+        public override double Subtract(double value1, double value2)
         {
-            double result = value1 - value2;
-            return Math.Round(result, 5);
+            Console.WriteLine("빼기 연산 중...");
+            return base.Subtract(value1, value2);
         }
         /**
-        * @brief 두 수를 곱한다
+        * @brief 곱하기 연산 재정의
         * @param value1 첫 번째 숫자
         * @param value2 두 번째 숫자
         * @return 두 숫자의 곱 반환
         * @note Patch-notes
-        * 2023-08-09|이은진|곱하기 기능
+        * 2023-08-16|이은진|재정의로 console 기능 추가
         */
-        public double Multiply(double value1, double value2)
+        public override double Multiply(double value1, double value2)
         {
-            return value1 * value2;
+            Console.WriteLine("곱하기 연산 중...");
+            return base.Multiply(value1, value2);
         }
         /**
-        * @brief 두 수를 나눈다
-        * @param value1 분자
-        * @param value2 분모
-        * @return 분자를 분모로 나눈 결과 반환, 분모가 0일 경우 NaN 반환
+        * @brief 나누기 연산 재정의
+        * @param value1 첫 번째 숫자
+        * @param value2 두 번째 숫자
+        * @return 두 숫자의 나눈값 반환
         * @note Patch-notes
-        * 2023-08-09|이은진|나누기 기능
+        * 2023-08-16|이은진|재정의로 console 기능 추가
         */
-        public double Divide(double value1, double value2)
+        public override double Divide(double value1, double value2)
         {
-            if (value2 == 0)
-            {
-                return double.NaN;
-            }
-            return value1 / value2;
+            Console.WriteLine("나누기 연산 중...");
+            return base.Divide(value1, value2);
         }
         /**
         * @brief 분수 연산 기능
