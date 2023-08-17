@@ -14,7 +14,7 @@ namespace calculator.ViewModels
     public class CalculatorViewModel : INotifyPropertyChanged
     {
         #region [필드]
-        private AdvancedCalculator adv_calc;
+        private AdvancedCalculator adv_calc = new AdvancedCalculator();
         private CalculatorModel calculator;
         private bool isHistoryVisible;
         private HistoryItem selectedHistoryItem;
