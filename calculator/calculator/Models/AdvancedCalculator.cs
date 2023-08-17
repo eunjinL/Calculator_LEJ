@@ -16,7 +16,6 @@ namespace calculator.Models
         * @note Patch-notes
         * 2023-08-16|이은진|재정의로 console 기능 추가
         */
-
         public override double Add(BaseCalculatorModel value1, BaseCalculatorModel value2)
         {
             Console.WriteLine("더하기 연산 중...");
