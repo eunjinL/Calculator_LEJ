@@ -33,10 +33,24 @@ namespace calculator.Models
                 {
                     postfix.Append(token);
                 }
+                else if (token == '(')
+                {
+                    operatorStack.Push(token);
+                }
+                else if (token == ')')
+                {
+                    while (operatorStack.Count > 0 && operatorStack.Peek() != '(')
+                    {
+                        postfix.Append(" " + operatorStack.Pop() + " ");
+                    }
+                    if (operatorStack.Count > 0 && operatorStack.Peek() == '(')
+                    {
+                        operatorStack.Pop();
+                    }
+                }
                 else
                 {
                     postfix.Append(" ");
-
                     while (operatorStack.Count > 0 && Precedence(token) <= Precedence(operatorStack.Peek()))
                     {
                         postfix.Append(operatorStack.Pop() + " ");
@@ -54,7 +68,6 @@ namespace calculator.Models
 
             return postfix.ToString().Trim();
         }
-
         /**
         * @brief 연산자의 우선순위를 반환
         * @param operatorSymbol - 우선순위를 판별할 연산자 기호
@@ -72,10 +85,15 @@ namespace calculator.Models
                 case 'x':
                 case '/':
                     return 2;
+                case '(':
+                case ')':
+                    return 0; // 괄호의 우선순위는 가장 높거나 낮음으로 설정합니다.
                 default:
                     throw new ArgumentException("연산 기호 오류");
             }
         }
+
+
         /**
         * @brief 후위 표기법 수식을 계산
         * @param postfix - 후위 표기법으로 표현된 수식
@@ -93,7 +111,7 @@ namespace calculator.Models
                 {
                     operandStack.Push(number);
                 }
-                else
+                else if (IsOperator(token))
                 {
                     double operand2 = operandStack.Pop();
                     double operand1 = operandStack.Pop();
@@ -137,6 +155,12 @@ namespace calculator.Models
                     throw new ArgumentException("연산 기호 오류");
             }
             return double.Parse(result.Result);
+        }
+
+
+        private bool IsOperator(string token)
+        {
+            return token == "+" || token == "-" || token == "x" || token == "/";
         }
 
     }

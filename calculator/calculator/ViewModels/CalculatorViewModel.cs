@@ -91,6 +91,9 @@ namespace calculator.ViewModels
         public ICommand CopyCommand { get; }
         public ICommand PasteCommand { get; }
         public ICommand HistoryCommand { get; }
+        public ICommand Left_ParenthesesCommand { get; private set; }
+        public ICommand Right_ParenthesesCommand { get; private set; }
+        public ICommand ClearHistoryCommand { get; private set; }
         public ICommand NumberCommand 
         { 
             get; 
@@ -101,6 +104,12 @@ namespace calculator.ViewModels
             get;
             private set;
         }
+        public ICommand ClearEntryCommand
+        {
+            get;
+            private set;
+        }
+        
         public ICommand EqualCommand
         { 
             get;
@@ -170,6 +179,7 @@ namespace calculator.ViewModels
             calculator = new CalculatorModel();
             NumberCommand = new RelayCommand(ExecuteNumber);
             DeleteCommand = new RelayCommand(ExecuteDelete);
+            ClearEntryCommand = new RelayCommand(ExecuteClearEntry);
             BackCommand = new RelayCommand(ExecuteBack);
             EqualCommand = new RelayCommand(ExecuteEqual);
             PlusCommand = new RelayCommand(ExecutePlus);
@@ -185,8 +195,12 @@ namespace calculator.ViewModels
             CosCommand = new RelayCommand(ExecuteCos);
             PercentCommand = new RelayCommand(ExecutePercent);
             HistoryCommand = new RelayCommand(ToggleHistory);
+            ClearHistoryCommand = new RelayCommand(ClearHistory);
             CopyCommand = new RelayCommand(ExecuteCopy);
-            PasteCommand = new RelayCommand(ExecutePaste);
+            PasteCommand = new RelayCommand(ExecutePaste); 
+            Left_ParenthesesCommand = new RelayCommand(LeftParenthesesExecute, CanExecute);
+            Right_ParenthesesCommand = new RelayCommand(RightParenthesesExecute, CanExecute);
+
         }
         #endregion
 
@@ -219,6 +233,18 @@ namespace calculator.ViewModels
             if (Result.Length > 0 || CalculationProcess.Length > 0)
             {
                 CalculationProcess = "";
+                Result = "";
+            }
+        }
+        /**
+        * @brief 결과창을 리셋
+        * @note Patch-notes
+        * 2023-08-09|이은진|결과창을 리셋
+        */
+        private void ExecuteClearEntry()
+        {
+            if (Result.Length > 0)
+            {
                 Result = "";
             }
         }
@@ -378,7 +404,7 @@ namespace calculator.ViewModels
         private void ExecuteEqual()
         {
             string input = $"{CalculationProcess}{Result}".TrimEnd();
-            if ("+-*/".Contains(input.Last()))
+            if ("+-*/(".Contains(input.Last()))
             {
                 input = input.Remove(input.Length - 1);
             }
@@ -464,6 +490,16 @@ namespace calculator.ViewModels
             IsHistoryVisible = !IsHistoryVisible;
         }
         /**
+        * @brief History clear 버튼 클릭시 리스트뷰 리셋
+        * @return 없음
+        * @note Patch-notes
+        * 2023-08-17|이은진|연산 기록 삭제
+        */
+        private void ClearHistory()
+        {
+            HistoryItems.Clear();
+        }
+        /**
         * @brief 연산 결과 ctrl+c기능 구현
         * @return 없음
         * @note Patch-notes
@@ -484,6 +520,28 @@ namespace calculator.ViewModels
             string clipboardText = Clipboard.GetText();
             Result = clipboardText.ToString();
         }
+        private void LeftParenthesesExecute(object parameter)
+        {
+            CalculationProcess += "(";
+            Result = "";
+        }
+
+        private void RightParenthesesExecute(object parameter)
+        {
+            if (!string.IsNullOrEmpty(Result))
+            {
+                CalculationProcess += Result;
+                Result = "";
+            }
+            CalculationProcess += ")";
+        }
+
+        private bool CanExecute(object parameter)
+        {
+            // 버튼을 활성화 또는 비활성화해야 하는 조건을 작성합니다.
+            return true; // 일단 모든 상황에서 활성화되도록 설정합니다.
+        }
+
         /**
         * @brief 속성 변경 알림 이벤트 발생
         * @param parameter - 변경된 속성의 이름

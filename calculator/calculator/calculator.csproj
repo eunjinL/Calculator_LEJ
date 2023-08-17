@@ -83,8 +83,9 @@
     </ApplicationDefinition>
     <Compile Include="Models\AdvancedCalculator.cs" />
     <Compile Include="Models\BaseCalculatorModel.cs" />
+    <Compile Include="Models\BooleanToVisibilityHistory.cs" />
+    <Compile Include="Models\BooleanToVisibilityInverseConverter.cs" />
     <Compile Include="Models\CalculatorModel.cs" />
-    <Compile Include="Models\ComplexNumberModel.cs" />
     <Compile Include="Models\HistoryItem.cs" />
     <Compile Include="ViewModels\CalculatorViewModel.cs" />
     <Compile Include="ViewModels\KeyBindingWithParameter.cs" />
@@ -138,6 +139,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\ic_history.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\ic_trash.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
