@@ -11,3 +11,4 @@ namespace calculator.Models
         public string HistoryText { get; set; }
     }
 }
+ 

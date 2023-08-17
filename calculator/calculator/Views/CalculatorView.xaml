@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:calculator.ViewModels"
         mc:Ignorable="d"
         Background="#f9f9f9"
-        Title="CalculatorView" Height="750" Width="485">
+        Title="CalculatorView" Width="400" Height="610">
     <Window.DataContext>
         <local:CalculatorViewModel />
     </Window.DataContext>
@@ -84,7 +84,7 @@
         <!--사칙 연산, 소수점-->
         <KeyBinding Key="Decimal" Command="{Binding DotCommand}"/>
         <KeyBinding Key="OemPeriod" Command="{Binding DotCommand}"/>
-        
+
         <KeyBinding Key="Add" Command="{Binding PlusCommand}"/>
         <KeyBinding Key="Subtract" Command="{Binding MinusCommand}"/>
         <KeyBinding Key="Divide" Command="{Binding DivideCommand}"/>
@@ -126,61 +126,57 @@
         <KeyBinding Modifiers="Ctrl" Key="C" Command="{Binding CopyCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="V" Command="{Binding PasteCommand}"/>
     </Window.InputBindings>
-    <Viewbox Stretch="Uniform">
-        <Grid 
-        HorizontalAlignment="Stretch"
-        Width="400"
-        Height="610"
+    <Grid 
         Background="#f9f9f9">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="3.5*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <!--History 버튼-->
-            <Button x:Name="HistoryBtn"
+        <Grid.RowDefinitions>
+            <RowDefinition Height="3.5*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <!--History 버튼-->
+        <Button x:Name="HistoryBtn"
                     Grid.Column="3"
                     VerticalAlignment="Top" 
                     HorizontalAlignment="Right" 
                     Margin="0,10,10,0"
                     Command="{Binding HistoryCommand}"
                     Background="Transparent"
-                    BorderBrush="Transparent">  
-                <Image Source="../Images/ic_history.png" Width="20" Height="20" />
-            </Button>
+                    BorderBrush="Transparent">
+            <Image Source="../Images/ic_history.png" Width="20" Height="20" />
+        </Button>
 
-            <!-- 계산 기록 리스트뷰 -->
-            <!-- 뒷 배경을 어둡게 하는 Rectangle 추가 -->
-            <Rectangle Grid.Row="1" Grid.RowSpan="6" Grid.ColumnSpan="4"
+        <!-- 계산 기록 리스트뷰 -->
+        <!-- 뒷 배경을 어둡게 하는 Rectangle 추가 -->
+        <Rectangle Grid.Row="1" Grid.RowSpan="6" Grid.ColumnSpan="4"
            Fill="Black"
            Opacity="0.5"
            Visibility="{Binding IsHistoryVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Hidden}" />
 
-            <!-- ListView 수정 -->
-            <!-- 전체 뒷 배경을 어둡게 하는 Rectangle -->
-            <Rectangle Grid.Row="0" Grid.RowSpan="7" Grid.ColumnSpan="4"
+        <!-- ListView 수정 -->
+        <!-- 전체 뒷 배경을 어둡게 하는 Rectangle -->
+        <Rectangle Grid.Row="0" Grid.RowSpan="7" Grid.ColumnSpan="4"
                        Fill="Black"
                        Opacity="0.5"
                        Visibility="{Binding IsHistoryVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Hidden}" 
                        >
-                <b:Interaction.Triggers>
-        <b:EventTrigger EventName="MouseUp">
-            <b:InvokeCommandAction Command="{Binding HistoryCommand}" />
-        </b:EventTrigger>
-    </b:Interaction.Triggers>
-            </Rectangle>
+            <b:Interaction.Triggers>
+                <b:EventTrigger EventName="MouseUp">
+                    <b:InvokeCommandAction Command="{Binding HistoryCommand}" />
+                </b:EventTrigger>
+            </b:Interaction.Triggers>
+        </Rectangle>
 
-            <ListView x:Name="HistoryListView"
+        <ListView x:Name="HistoryListView"
                       Canvas.ZIndex="2"
                       Grid.Row="1" 
                       Grid.RowSpan="6"
@@ -189,37 +185,37 @@
                       SelectedItem="{Binding SelectedHistoryItem, Mode=TwoWay}"
                       Visibility="{Binding IsHistoryVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Hidden}">
 
-                <!-- ListView 스타일과 ControlTemplate 수정 -->
-                <ListView.Style>
-                    <Style TargetType="ListView">
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="ListView">
-                                    <Border Background="{TemplateBinding Background}"
+            <!-- ListView 스타일과 ControlTemplate 수정 -->
+            <ListView.Style>
+                <Style TargetType="ListView">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListView">
+                                <Border Background="{TemplateBinding Background}"
                                 BorderThickness="0" 
                                 CornerRadius="10 10 0 0">
-                                        <ScrollViewer>
-                                            <ItemsPresenter />
-                                        </ScrollViewer>
-                                    </Border>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </ListView.Style>
+                                    <ScrollViewer>
+                                        <ItemsPresenter />
+                                    </ScrollViewer>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListView.Style>
 
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn 
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn 
                 Width="Auto"
                 Header="과거 계산 기록" 
                 DisplayMemberBinding="{Binding HistoryText}" />
-                    </GridView>
-                </ListView.View>
-            </ListView>
+                </GridView>
+            </ListView.View>
+        </ListView>
 
-            <!--연산 과정 출력 창-->
-            <TextBlock x:Name="processTextBox"
+        <!--연산 과정 출력 창-->
+        <TextBlock x:Name="processTextBox"
                    Focusable="False"
                    Grid.ColumnSpan="4"
                    Margin="10,10,20,90"
@@ -229,8 +225,8 @@
                    Foreground="Gray"
                    FontSize="20" />
 
-            <!--연산 결과 창-->
-            <Label x:Name="resultLabel"
+        <!--연산 결과 창-->
+        <Label x:Name="resultLabel"
                Grid.ColumnSpan="4"
                Margin="0,0,10,10"
                Grid.Row="0"
@@ -240,8 +236,8 @@
                FontSize="36"
                Content="{Binding Result}"/>
 
-            <!--숫자 버튼-->
-            <Button x:Name="ZeroBtn"
+        <!--숫자 버튼-->
+        <Button x:Name="ZeroBtn"
                 Grid.Column="1"
                 Grid.Row="6"
                 Content="0"
@@ -249,7 +245,7 @@
                 Style="{StaticResource num_btn_style}"
                 Command="{Binding NumberCommand}"
                 CommandParameter="0"/>
-            <Button x:Name="OneBtn"
+        <Button x:Name="OneBtn"
                 Grid.Column="0"
                 Grid.Row="5"
                 Content="1"
@@ -257,7 +253,7 @@
                 Style="{StaticResource num_btn_style}"
                 Command="{Binding NumberCommand}"
                 CommandParameter="1"/>
-            <Button x:Name="TwoBtn"
+        <Button x:Name="TwoBtn"
                 Grid.Column="1"
                 Grid.Row="5"
                 Content="2"
@@ -265,7 +261,7 @@
                 Style="{StaticResource num_btn_style}"
                 Command="{Binding NumberCommand}"
                 CommandParameter="2"/>
-            <Button x:Name="ThreeBtn"
+        <Button x:Name="ThreeBtn"
                 Grid.Column="2"
                 Grid.Row="5"
                 Content="3"
@@ -273,7 +269,7 @@
                 Style="{StaticResource num_btn_style}"
                 Command="{Binding NumberCommand}"
                 CommandParameter="3"/>
-            <Button x:Name="FourBtn"
+        <Button x:Name="FourBtn"
                 Grid.Column="0"
                 Grid.Row="4"
                 Content="4"
@@ -281,7 +277,7 @@
                 Style="{StaticResource num_btn_style}"
                 Command="{Binding NumberCommand}"
                 CommandParameter="4"/>
-            <Button x:Name="FiveBtn"
+        <Button x:Name="FiveBtn"
                 Grid.Column="1"
                 Grid.Row="4"
                 Content="5"
@@ -289,7 +285,7 @@
                 Style="{StaticResource num_btn_style}"
                 Command="{Binding NumberCommand}"
                 CommandParameter="5"/>
-            <Button x:Name="SixBtn"
+        <Button x:Name="SixBtn"
                 Grid.Column="2"
                 Grid.Row="4"
                 Content="6"
@@ -297,7 +293,7 @@
                 Style="{StaticResource num_btn_style}"
                 Command="{Binding NumberCommand}"
                 CommandParameter="6"/>
-            <Button x:Name="SevenBtn"
+        <Button x:Name="SevenBtn"
                 Grid.Column="0"
                 Grid.Row="3"
                 Content="7"
@@ -305,7 +301,7 @@
                 Style="{StaticResource num_btn_style}"
                 Command="{Binding NumberCommand}"
                 CommandParameter="7"/>
-            <Button x:Name="EightBtn"
+        <Button x:Name="EightBtn"
                 Grid.Column="1"
                 Grid.Row="3"
                 Content="8"
@@ -313,7 +309,7 @@
                 Style="{StaticResource num_btn_style}"
                 Command="{Binding NumberCommand}"
                 CommandParameter="8"/>
-            <Button x:Name="NineBtn"
+        <Button x:Name="NineBtn"
                 Grid.Column="2"
                 Grid.Row="3"
                 Content="9"
@@ -322,8 +318,8 @@
                 Command="{Binding NumberCommand}"
                 CommandParameter="9"/>
 
-            <!--기호 버튼-->
-            <Button x:Name="DotBtn"
+        <!--기호 버튼-->
+        <Button x:Name="DotBtn"
                 Grid.Column="2"
                 Grid.Row="6"
                 Content="."
@@ -331,7 +327,7 @@
                 Style="{StaticResource num_btn_style}"
                 Command="{Binding DotCommand}"
                 CommandParameter="0"/>
-            <Button x:Name="SymbolBtn"
+        <Button x:Name="SymbolBtn"
                 Grid.Column="0"
                 Grid.Row="6"
                 Content="+/-"
@@ -340,36 +336,36 @@
                 Command="{Binding SymbolCommand}"
                 CommandParameter="0"/>
 
-            <!--연산 버튼-->
-            <Button x:Name="EqulBtn"
+        <!--연산 버튼-->
+        <Button x:Name="EqulBtn"
                 Grid.Column="3"
                 Grid.Row="6"
                 Content="="
                 Grid.ColumnSpan="1"
                 Style="{StaticResource eq_btn_style}"
                 Command="{Binding EqualCommand}"/>
-            <Button x:Name="PlusBtn"
+        <Button x:Name="PlusBtn"
                 Grid.Column="3"
                 Grid.Row="5"
                 Content="+"
                 Grid.ColumnSpan="1"
                 Style="{StaticResource op_btn_style}"
                 Command="{Binding PlusCommand}"/>
-            <Button x:Name="MinusBtn"
+        <Button x:Name="MinusBtn"
                 Grid.Column="3"
                 Grid.Row="4"
                 Content="-"
                 Grid.ColumnSpan="1"
                 Style="{StaticResource op_btn_style}"
                 Command="{Binding MinusCommand}" />
-            <Button x:Name="MulBtn"
+        <Button x:Name="MulBtn"
                 Grid.Column="3"
                 Grid.Row="3"
                 Content="x"
                 Grid.ColumnSpan="1"
                 Style="{StaticResource op_btn_style}"
                 Command="{Binding MultiplyCommand}"/>
-            <Button x:Name="DivBtn"
+        <Button x:Name="DivBtn"
                 Grid.Column="3"
                 Grid.Row="2"
                 Content="/"
@@ -377,56 +373,55 @@
                 Style="{StaticResource op_btn_style}"
                 Command="{Binding DivideCommand}"/>
 
-            <!--기타부호-->
-            <Button x:Name="DeleteBtn"
+        <!--기타부호-->
+        <Button x:Name="DeleteBtn"
                 Grid.Column="3"
                 Grid.Row="1"
                 Content="C"
                 Grid.ColumnSpan="1"
                 Style="{StaticResource op_btn_style}"
                 Command="{Binding DeleteCommand}"/>
-            <Button x:Name="FractionBtn"
+        <Button x:Name="FractionBtn"
                 Grid.Column="1"
                 Grid.Row="2"
                 Content="1/x"
                 Grid.ColumnSpan="1"
                 Style="{StaticResource op_btn_style}"
                 Command="{Binding FractionCommand}"/>
-            <Button x:Name="SquareBtn"
+        <Button x:Name="SquareBtn"
                 Grid.Column="0"
                 Grid.Row="2"
                 Content="x²"
                 Grid.ColumnSpan="1"
                 Style="{StaticResource op_btn_style}"
                 Command="{Binding SquareCommand}"/>
-            <Button x:Name="SquareRootBtn"
+        <Button x:Name="SquareRootBtn"
                 Grid.Column="2"
                 Grid.Row="2"
                 Content="²√x"
                 Grid.ColumnSpan="1"
                 Style="{StaticResource op_btn_style}"
                 Command="{Binding SquareRootCommand}"/>
-            <Button x:Name="SinBtn"
+        <Button x:Name="SinBtn"
                 Grid.Column="2"
                 Grid.Row="1"
                 Content="sin"
                 Grid.ColumnSpan="1"
                 Style="{StaticResource op_btn_style}"
                 Command="{Binding SinCommand}"/>
-            <Button x:Name="CosBtn"
+        <Button x:Name="CosBtn"
                 Grid.Column="1"
                 Grid.Row="1"
                 Content="cos"
                 Grid.ColumnSpan="1"
                 Style="{StaticResource op_btn_style}"
                 Command="{Binding CosCommand}"/>
-            <Button x:Name="PercentBtn"
+        <Button x:Name="PercentBtn"
                 Grid.Column="0"
                 Grid.Row="1"
                 Content="%"
                 Grid.ColumnSpan="1"
                 Style="{StaticResource op_btn_style}"
                 Command="{Binding PercentCommand}"/>
-        </Grid>
-    </Viewbox>
+    </Grid>
 </Window>
