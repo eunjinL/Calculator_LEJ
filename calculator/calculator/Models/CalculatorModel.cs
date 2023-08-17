@@ -15,6 +15,7 @@ namespace calculator.Models
         * @note Patch-notes
         * 2023-08-11|이은진|중위를 후위 표기법으로 변환
         * 2023-08-14|이은진|후위 표기법으로 변환 시 음수는 연산자가 아니라 부호로 인식되게 변경
+        * 2023-08-17|이은진|괄호 기능 추가
         */
         public string ConvertToPostfix(string infix)
         {

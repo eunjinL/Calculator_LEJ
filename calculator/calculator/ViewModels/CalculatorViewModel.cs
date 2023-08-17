@@ -383,17 +383,27 @@ namespace calculator.ViewModels
         */
         private void PerformIntermediateCalculation()
         {
-            if (string.IsNullOrEmpty(Result))
+            if (IsOperator(Result) && (CalculationProcess.Length > 0 && IsOperator(CalculationProcess.Last().ToString())))
             {
-                CalculationProcess = $"{CalculationProcess}0";
-                Result = "";
+                CalculationProcess = $"{CalculationProcess}0{Result}";
             }
             else
             {
-                double operand = double.Parse(Result);
                 CalculationProcess = $"{CalculationProcess}{Result}";
-                Result = "";
             }
+
+            Result = "";
+        }
+        /**
+        * @brief 연산자 여부 확인
+        * @note Patch-notes
+        * 2023-08-17|이은진|괄호는 연산자가 아님
+        */
+        private bool IsOperator(string value)
+        {
+            // 괄호를 연산자에서 제외
+            string[] operators = { "+", "-", "*", "/" };
+            return operators.Contains(value);
         }
         /**
         * @brief 등호 연산 수행, 입력된 계산 과정을 합쳐서 최종 수식을 만들고, 중위 표기법에서 후위 표기법으로 바꿈, 연산 결과 출력 후 계산 과정을 비움
@@ -538,8 +548,8 @@ namespace calculator.ViewModels
 
         private bool CanExecute(object parameter)
         {
-            // 버튼을 활성화 또는 비활성화해야 하는 조건을 작성합니다.
-            return true; // 일단 모든 상황에서 활성화되도록 설정합니다.
+            // 버튼을 활성화 또는 비활성화해야 하는 조건
+            return true; 
         }
 
         /**
