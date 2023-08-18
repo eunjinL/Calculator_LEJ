@@ -67,7 +67,7 @@ namespace calculator.ViewModels
                     if (indexOfEqualSign != -1 && indexOfEqualSign < historyText.Length - 1)
                     {
                         var resultString = historyText.Substring(indexOfEqualSign + 1).Trim();
-                        Result = resultString; 
+                        Result = resultString;
                     }
                 }
                 OnPropertyChanged(nameof(SelectedHistoryItem));
@@ -86,7 +86,7 @@ namespace calculator.ViewModels
         {
             get { return historyItems; }
         }
-        
+
         public ICommand BackCommand { get; }
         public ICommand CopyCommand { get; }
         public ICommand PasteCommand { get; }
@@ -94,13 +94,13 @@ namespace calculator.ViewModels
         public ICommand Left_ParenthesesCommand { get; private set; }
         public ICommand Right_ParenthesesCommand { get; private set; }
         public ICommand ClearHistoryCommand { get; private set; }
-        public ICommand NumberCommand 
-        { 
-            get; 
-            private set; 
+        public ICommand NumberCommand
+        {
+            get;
+            private set;
         }
-        public ICommand DeleteCommand 
-        { 
+        public ICommand DeleteCommand
+        {
             get;
             private set;
         }
@@ -109,16 +109,16 @@ namespace calculator.ViewModels
             get;
             private set;
         }
-        
+
         public ICommand EqualCommand
-        { 
+        {
             get;
         }
-        public ICommand PlusCommand 
-        { 
+        public ICommand PlusCommand
+        {
             get;
         }
-        public ICommand MinusCommand 
+        public ICommand MinusCommand
         {
             get;
         }
@@ -197,7 +197,7 @@ namespace calculator.ViewModels
             HistoryCommand = new RelayCommand(ToggleHistory);
             ClearHistoryCommand = new RelayCommand(ClearHistory);
             CopyCommand = new RelayCommand(ExecuteCopy);
-            PasteCommand = new RelayCommand(ExecutePaste); 
+            PasteCommand = new RelayCommand(ExecutePaste);
             Left_ParenthesesCommand = new RelayCommand(LeftParenthesesExecute, CanExecute);
             Right_ParenthesesCommand = new RelayCommand(RightParenthesesExecute, CanExecute);
 
@@ -268,8 +268,15 @@ namespace calculator.ViewModels
         private void ExecutePlus()
         {
             PerformIntermediateCalculation();
-            CalculationProcess = string.Format("{0} + ", CalculationProcess);
+            CalculationProcess = CalculationProcess.TrimEnd();
+
+            if (CalculationProcess.Length > 0 && !IsOperator(CalculationProcess.Last().ToString()))
+            {
+                CalculationProcess = string.Format("{0} + ", CalculationProcess);
+            }
         }
+
+
         /**
         * @brief 뺄셈 연산 수행
         * @note Patch-notes
@@ -278,7 +285,12 @@ namespace calculator.ViewModels
         private void ExecuteMinus()
         {
             PerformIntermediateCalculation();
-            CalculationProcess = string.Format("{0} - ", CalculationProcess);
+            CalculationProcess = CalculationProcess.TrimEnd();
+
+            if (CalculationProcess.Length > 0 && !IsOperator(CalculationProcess.Last().ToString()))
+            {
+                CalculationProcess = string.Format("{0} - ", CalculationProcess);
+            }
         }
         /**
         * @brief 곱셈 연산 수행
@@ -288,7 +300,12 @@ namespace calculator.ViewModels
         private void ExecuteMultiply()
         {
             PerformIntermediateCalculation();
-            CalculationProcess = string.Format("{0} x ", CalculationProcess);
+            CalculationProcess = CalculationProcess.TrimEnd();
+
+            if (CalculationProcess.Length > 0 && !IsOperator(CalculationProcess.Last().ToString()))
+            {
+                CalculationProcess = string.Format("{0} x ", CalculationProcess);
+            }
         }
         /**
         * @brief 나눗셈 연산 수행
@@ -299,7 +316,12 @@ namespace calculator.ViewModels
         private void ExecuteDivide()
         {
             PerformIntermediateCalculation();
-            CalculationProcess = string.Format("{0} / ", CalculationProcess);
+            CalculationProcess = CalculationProcess.TrimEnd();
+
+            if (CalculationProcess.Length > 0 && !IsOperator(CalculationProcess.Last().ToString()))
+            {
+                CalculationProcess = string.Format("{0} / ", CalculationProcess);
+            }
         }
         /**
         * @brief 소수점 추가
@@ -401,7 +423,6 @@ namespace calculator.ViewModels
         */
         private bool IsOperator(string value)
         {
-            // 괄호를 연산자에서 제외
             string[] operators = { "+", "-", "*", "/" };
             return operators.Contains(value);
         }
@@ -549,7 +570,7 @@ namespace calculator.ViewModels
         private bool CanExecute(object parameter)
         {
             // 버튼을 활성화 또는 비활성화해야 하는 조건
-            return true; 
+            return true;
         }
 
         /**

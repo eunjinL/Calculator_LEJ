@@ -70,7 +70,6 @@ namespace calculator.Models
             result.Result = sum.ToString();
             return result;
         }
-
         public static BaseCalculatorModel operator -(AdvancedCalculator value1, AdvancedCalculator value2)
         {
             Console.WriteLine("\n- 연산자 재정의...");

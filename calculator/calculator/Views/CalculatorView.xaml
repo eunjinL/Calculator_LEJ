@@ -162,13 +162,12 @@
             <Image Source="../Images/ic_history.png" Width="20" Height="20" />
         </Button>
 
-        <!-- ListView 수정 -->
+        <!-- ListView -->
         <!-- 전체 뒷 배경을 어둡게 하는 Rectangle -->
         <Rectangle Grid.Row="0" Grid.RowSpan="7" Grid.ColumnSpan="4"
                        Fill="Black"
                        Opacity="0.5"
-                       Visibility="{Binding IsHistoryVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Hidden}" 
-                       >
+                       Visibility="{Binding IsHistoryVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Hidden}">
             <b:Interaction.Triggers>
                 <b:EventTrigger EventName="MouseUp">
                     <b:InvokeCommandAction Command="{Binding HistoryCommand}" />
@@ -177,7 +176,9 @@
         </Rectangle>
 
         <ListView x:Name="HistoryListView"
-          Canvas.ZIndex="2"
+          VerticalAlignment="Stretch"
+          HorizontalAlignment="Stretch"
+          Canvas.ZIndex="4"
           Grid.Row="1" 
           Grid.RowSpan="7"
           Grid.ColumnSpan="4"
@@ -194,7 +195,7 @@
                                 BorderThickness="0" 
                                 CornerRadius="10 10 0 0">
                                     <Grid>
-                                        <ScrollViewer>
+                                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                                             <ItemsPresenter />
                                         </ScrollViewer>
                                         <TextBlock Text="아직 기록이 없음"
@@ -223,11 +224,18 @@
 
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Width="Auto"
-                            Header="과거 계산 기록" 
-                            DisplayMemberBinding="{Binding HistoryText}" />
+                    <GridViewColumn Header="과거 계산 기록">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock 
+                        Text="{Binding HistoryText}" 
+                        TextTrimming="CharacterEllipsis" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                 </GridView>
             </ListView.View>
+
         </ListView>
 
 
