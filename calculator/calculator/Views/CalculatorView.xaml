@@ -184,9 +184,9 @@
           ItemsSource="{Binding HistoryItems}"
           SelectedItem="{Binding SelectedHistoryItem, Mode=TwoWay}"
           Visibility="{Binding IsHistoryVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Hidden}">
-            <!-- ListView 스타일과 ControlTemplate 수정 -->
             <ListView.Style>
                 <Style TargetType="ListView">
+                    <Setter Property="FontSize" Value="15"/>
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="ListView">
@@ -198,6 +198,7 @@
                                             <ItemsPresenter />
                                         </ScrollViewer>
                                         <TextBlock Text="아직 기록이 없음"
+                                                   FontSize="15"
                                                    HorizontalAlignment="Center"
                                                    VerticalAlignment="Center"
                                                    Visibility="{Binding Path=Items.Count, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BooleanToVisibilityInverseConverter}}"/>
