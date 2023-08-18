@@ -88,13 +88,11 @@ namespace calculator.Models
                     return 2;
                 case '(':
                 case ')':
-                    return 0; // 괄호의 우선순위는 가장 높거나 낮음으로 설정합니다.
+                    return 0; 
                 default:
                     throw new ArgumentException("연산 기호 오류");
             }
         }
-
-
         /**
         * @brief 후위 표기법 수식을 계산
         * @param postfix - 후위 표기법으로 표현된 수식
