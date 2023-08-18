@@ -20,6 +20,7 @@ namespace calculator.ViewModels
         private HistoryItem selectedHistoryItem;
         private ObservableCollection<HistoryItem> historyItems = new ObservableCollection<HistoryItem>();
         private BaseCalculatorModel calcModel = new BaseCalculatorModel();
+        private bool isCalculationCompleted = false;
         #endregion
 
         #region [속성]
@@ -218,6 +219,12 @@ namespace calculator.ViewModels
         private void ExecuteNumber(object parameter)
         {
             string number = parameter as string;
+            if (isCalculationCompleted)
+            {
+                CalculationProcess = "";
+                Result = "";
+                isCalculationCompleted = false;
+            }
             if (number != null)
             {
                 Result += number;
@@ -453,7 +460,8 @@ namespace calculator.ViewModels
             }
             historyItems.Add(new HistoryItem { HistoryText = input + " = " + Result });
             IntermediateResult = 0;
-            CalculationProcess = "";
+            CalculationProcess = input + " = ";
+            isCalculationCompleted = true;
         }
         /**
         * @brief 함수 연산 수행
